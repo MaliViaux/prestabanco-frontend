@@ -1,11 +1,11 @@
 import httpClient from "../http-common";
 
-const calcularCuotaMensual = (monto, plazo, tipoCredito) => {
+const calcularCuotaMensual = (monto, plazo, interes) => {
     return httpClient.post("/api/v1/calculos/cuotaMensual", null, {
         params: {
             monto: monto,
             plazo: plazo,
-            tipoCredito: tipoCredito
+            interes: interes
         }
     });
 }
@@ -26,22 +26,22 @@ const calcularComisionAdministracion = monto => {
     });
 }
 
-const calcularCostoMensual = (monto, plazo, tipoCredito) => {
+const calcularCostoMensual = (monto, plazo, interes) => {
     return httpClient.post("/api/v1/calculos/costoMensual", null, {
         params: {
             monto: monto,
             plazo: plazo,
-            tipoCredito: tipoCredito
+            interes: interes
         }
     });
 }
 
-const calcularCostoTotal = (monto, plazo, tipoCredito) => {
+const calcularCostoTotal = (monto, plazo, interes) => {
     return httpClient.post("/api/v1/calculos/costoTotal", null, {
         params: {
             monto: monto,
             plazo: plazo,
-            tipoCredito: tipoCredito
+            interes: interes
         }
     });
 }

@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { InputLabel, Select } from '@mui/material';
-import usuarioService from "../services/usuario.service";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import clienteService from "../services/cliente.service";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControl from "@mui/material/FormControl";
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -21,57 +19,41 @@ const Register = () => {
   const [edad, setEdad] = useState("");
   const navigate = useNavigate();
 
-  const saveUsuario = (e) => {
+  const savecliente = (e) => {
     e.preventDefault();
 
     if (!rut.trim()) {
-      console.error('Rut no puede estar vacio.');
+      alert('Rut no puede estar vacío.');
       return;
     }
 
     if (!contraseña.trim()) {
-      console.error('Contraseña no puede estar vacio.');
+      alert('Contraseña no puede estar vacía.');
       return;
     }
 
     if (!nombre.trim()) {
-      console.error('Contraseña no puede estar vacio.');
+      alert('Nombre no puede estar vacío.');
       return;
     }
 
     if (!apellido.trim()) {
-      console.error('Contraseña no puede estar vacio.');
+      alert('Apellido no puede estar vacío.');
       return;
     }
 
-    const usuario = { rut, contraseña, nombre, apellido, edad };
-    if (rut) { //Actualizar Datos Usuario
-      usuarioService
-        .update(usuario)
-        .then((response) => {
-          console.log("Usuario ha sido actualizado.", response.data);
-          navigate("/login");
-        })
-        .catch((error) => {
-          console.log(
-            "Ha ocurrido un error al intentar actualizar datos del usuario.",
-            error
-          );
-        });
-    } else { //Crear nuevo usuario
-      usuarioService
-        .create(usuario)
-        .then((response) => {
-          console.log("Usuario ha sido creado.", response.data);
-          navigate("/login");
-        })
-        .catch((error) => {
-          console.log(
-            "Ha ocurrido un error al intentar crear nuevo usuario.",
-            error
-          );
-        });
-    }
+    const cliente = { rut, contraseña, nombre, apellido, edad };
+    clienteService
+      .create(cliente)
+      .then((response) => {
+        alert("Usuario creado exitosamente.");
+        console.log("Cliente ha sido creado.", response.data);
+        navigate("/login");
+      })
+      .catch((error) => {
+        alert("Ha ocurrido un error al intentar crear el nuevo usuario.");
+        console.error("Error al crear el cliente:", error);
+      });
   };
 
   const handleEdadChange = (event) => {
@@ -175,7 +157,7 @@ const Register = () => {
             type="submit"
             fullWidth
             variant="contained"
-            onClick={(e) => saveUsuario(e)}
+            onClick={(e) => savecliente(e)}
             sx={{ mt: 3, mb: 2, backgroundColor: '#4bba5f' }}
           >
             Registrarse

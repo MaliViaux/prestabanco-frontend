@@ -1,19 +1,38 @@
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { InputLabel, Select } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, Button, CssBaseline, TextField, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import ejecutivoService from "../services/ejecutivo.service";
+import { UserContext } from "../contexts/UserContext";
 
-export default function LoginEjecutivo() {
+const LoginEjecutivo = () => {
+  const [contraseña, setContraseña] = useState("");
+  const navigate = useNavigate();
+  const { login } = useContext(UserContext); // Usar login desde el contexto
+
+  const loginEjecutivo = (e) => {
+    e.preventDefault();
+
+    if (!contraseña.trim()) {
+      console.error("Contraseña no puede estar vacía.");
+      return;
+    }
+
+    ejecutivoService.login(contraseña)
+      .then(response => {
+        if (response.data) {
+          console.log("Login exitoso.");
+          login("ejecutivo", ""); // Cambiar userType a 'ejecutivo'
+          navigate("/home");
+        } else {
+          console.error("Login fallido. Contraseña incorrecta.");
+        }
+      })
+      .catch(error => {
+        console.error("Error en el login:", error);
+      });
+  };
+
   return (
     <Container component="main" maxWidth="xs" className="login-page">
       <CssBaseline />
@@ -31,7 +50,7 @@ export default function LoginEjecutivo() {
         <Typography component="h1" variant="h5">
           Login Ejecutivos
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
+        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={loginEjecutivo}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -39,22 +58,25 @@ export default function LoginEjecutivo() {
             fullWidth
             name="contraseña"
             label="Contraseña"
-            type="contraseña"
+            type="password"
             id="contraseña"
             autoComplete="current-contraseña"
+            value={contraseña}
+            onChange={(e) => setContraseña(e.target.value)}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, backgroundColor: '#4bba5f'  }}
+            sx={{ mt: 3, mb: 2, backgroundColor: '#4bba5f' }}
           >
             Ingresar
           </Button>
         </Box>
       </Box>
-      <Box mt={8}>
-      </Box>
+      <Box mt={8}></Box>
     </Container>
   );
-}
+};
+
+export default LoginEjecutivo;

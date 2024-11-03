@@ -1,25 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import HomeIcon from "@mui/icons-material/Home";
 import CalculateIcon from '@mui/icons-material/Calculate';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import ListIcon from '@mui/icons-material/List';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext'; // Importar el contexto
 
-export default function Sidemenu({ open, toggleDrawer, userType }) {
+export default function Sidemenu({ open, toggleDrawer }) {
   const navigate = useNavigate();
+  const { userType, logout } = useContext(UserContext); // Obtener userType y logout del contexto
 
   const listOptions = () => (
     <Box role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
       <List>
         <ListItemButton onClick={() => navigate("/home")}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
+          <ListItemIcon><HomeIcon /></ListItemIcon>
           <ListItemText primary="Home" />
         </ListItemButton>
-
         <Divider />
-
-        {/* Opciones para Clientes */}
         {userType === 'cliente' && (
           <>
             <ListItemButton onClick={() => navigate("/cliente/simulacion")}>
@@ -28,29 +28,33 @@ export default function Sidemenu({ open, toggleDrawer, userType }) {
               </ListItemIcon>
               <ListItemText primary="Simulación de Crédito" />
             </ListItemButton>
-          </>
-        )}
-
-        {/* Opciones para Ejecutivos */}
-        {userType === 'ejecutivo' && (
-          <>
-            <ListItemButton onClick={() => navigate("/ejecutivo/evaluacion")}>
+            <ListItemButton onClick={() => navigate("/cliente/formulario")}>
               <ListItemIcon>
-                <CalculateIcon />
+                <LocalAtmIcon />
               </ListItemIcon>
-              <ListItemText primary="Evaluación de Solicitudes" />
+              <ListItemText primary="Solicitar Credito" />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate("/cliente/solicitudes")}>
+              <ListItemIcon>
+                <ListIcon />
+              </ListItemIcon>
+              <ListItemText primary="Mis Solicitudes" />
             </ListItemButton>
           </>
+        )}
+        {userType === 'ejecutivo' && (
+          <ListItemButton onClick={() => navigate("/ejecutivo/solicitudes")}>
+            <ListItemIcon><CalculateIcon /></ListItemIcon>
+            <ListItemText primary="Evaluación de Solicitudes" />
+          </ListItemButton>
         )}
       </List>
     </Box>
   );
 
   return (
-    <div>
-      <Drawer anchor={"left"} open={open} onClose={toggleDrawer(false)}>
-        {listOptions()}
-      </Drawer>
-    </div>
+    <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
+      {listOptions()}
+    </Drawer>
   );
 }
